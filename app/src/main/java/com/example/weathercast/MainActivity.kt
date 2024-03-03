@@ -72,7 +72,7 @@ class MainActivity : AppCompatActivity() {
                     val min = responseBody.main.temp_min
 
                     Log.d("TAG", "onResponse:$temperature")
-                    binding.todayTemp.text = "$temperature °C"
+                    binding.todayTemp.text = "$temperature°C"
                     binding.weatherText.text = condition
 //                    binding.condition.text = condition
                     binding.maxText.text = "Max Temp: $max °C"
@@ -107,33 +107,31 @@ class MainActivity : AppCompatActivity() {
 
         when (conditions) {
             "Clear Sky", "Sunny", "Clear" -> {
-//                binding.root.setBackgroundResource(R.drawable.sun)
-                binding.imageView.setBackgroundResource(R.drawable.sun)
+                binding.icon.setBackgroundResource(R.drawable.sunny)
                 binding.lottieAnimationView.setAnimation(R.raw.sun)
             }
 
             "Partly Cloudy", "Clouds", "Overcast", "Mist", "Foggy" -> {
-
-                binding.imageView.setBackgroundResource(R.drawable.cloud)
+                binding.icon.setBackgroundResource(R.drawable.cloudy)
                 binding.lottieAnimationView.setAnimation(R.raw.cloud)
             }
 
             "Light Rain", "Drizzle", "Moderate Rain", "Showers", "Heavy" -> {
-                binding.root.setBackgroundResource(R.drawable.rain)
+                binding.icon.setBackgroundResource(R.drawable.stormy)
                 binding.lottieAnimationView.setAnimation(R.raw.rain)
             }
             "Light Snow", "Moderate Snow", "Hesavy Snow", "Blizzard" -> {
-                binding.imageView.setBackgroundResource(R.drawable.snow)
+                binding.icon.setBackgroundResource(R.drawable.snowy)
                 binding.lottieAnimationView.setAnimation(R.raw.snow)
             }
 
             "Haze" -> {
-                binding.imageView.setBackgroundResource(R.drawable.haze)
+                binding.icon.setBackgroundResource(R.drawable.hazy)
                 binding.lottieAnimationView.setAnimation(R.raw.haze)
             }
 
             else -> {
-                binding.imageView.setBackgroundResource(R.drawable.sun)
+                binding.icon.setBackgroundResource(R.drawable.sunny)
                 binding.lottieAnimationView.setAnimation(R.raw.sun)
             }
 
