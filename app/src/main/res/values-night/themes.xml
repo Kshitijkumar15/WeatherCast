@@ -2,6 +2,10 @@
     <!-- Base application theme. -->
     <style name="Base.Theme.WeatherCast" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your dark theme here. -->
-        <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+        <item name="colorPrimary">@color/black</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="backgroundColor">#FF000000</item>
+        <item name="fontFamily" >@font/om</item>
+        <item name="cardBackgroundColor">#FF000000</item>
     </style>
 </resources>

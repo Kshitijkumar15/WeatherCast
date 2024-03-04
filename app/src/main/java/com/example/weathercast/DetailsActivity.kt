@@ -1,6 +1,8 @@
 package com.example.weathercast
 
+import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.weathercast.databinding.ActivityDetailsBinding
 import retrofit2.Call
@@ -21,6 +23,12 @@ class DetailsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         fetchWeatherData("Bengaluru")
+
+        binding.save.setOnClickListener {
+            val intent=Intent(this,MainActivity::class.java)
+            startActivity(intent)
+            Toast.makeText(this,"Home",Toast.LENGTH_LONG).show()
+        }
     }
 
     private fun fetchWeatherData(cityName: String) {
@@ -46,6 +54,7 @@ class DetailsActivity : AppCompatActivity() {
                     binding.sunrise.text = "${time(sunRise)} am"
                     binding.sunset.text = "${time(sunSet)} pm"
                     binding.sea.text = "$seaLevel hPa"
+                    changeBackgroundWithCondition(condition)
                 }
 
             }
@@ -59,7 +68,35 @@ class DetailsActivity : AppCompatActivity() {
 
     }
 
+    private fun changeBackgroundWithCondition(conditions: String) {
 
+        when (conditions) {
+            "Clear Sky", "Sunny", "Clear" -> {
+                binding.conditionImage.setImageResource(R.drawable.sunny)
+            }
+
+            "Partly Cloudy", "Clouds", "Overcast", "Mist", "Foggy" -> {
+                binding.conditionImage.setImageResource(R.drawable.cloudy)
+            }
+
+            "Light Rain", "Drizzle", "Moderate Rain", "Showers", "Heavy" -> {
+                binding.conditionImage.setImageResource(R.drawable.stormy)
+            }
+
+            "Light Snow", "Moderate Snow", "Heavy Snow", "Blizzard" -> {
+                binding.conditionImage.setImageResource(R.drawable.snowy)
+            }
+
+            "Haze" -> {
+                binding.conditionImage.setImageResource(R.drawable.hazy)
+            }
+
+            else -> {
+                binding.conditionImage.setImageResource(R.drawable.sunny)
+            }
+
+        }
+    }
     private fun date(): String {
         val sdf = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault())
         return sdf.format((Date()))
@@ -74,4 +111,6 @@ class DetailsActivity : AppCompatActivity() {
         val sdf = SimpleDateFormat("EEEE", Locale.getDefault())
         return sdf.format((Date()))
     }
+
+
 }

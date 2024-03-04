@@ -11,7 +11,10 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-
+import java.lang.System.currentTimeMillis
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 
 class MainActivity : AppCompatActivity() {
@@ -22,7 +25,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
-
         fetchWeatherData("Bengaluru")
         searchCity()
 
@@ -62,11 +64,6 @@ class MainActivity : AppCompatActivity() {
                 val responseBody = response.body()
                 if (response.isSuccessful && responseBody != null) {
                     val temperature = responseBody.main.temp.toString()
-//                    val humidity = responseBody.main.humidity
-//                    val windSpeed = responseBody.wind.speed
-//                    val sunRise = responseBody.sys.sunrise.toLong()
-//                    val sunSet = responseBody.sys.sunset.toLong()
-//                    val seaLevel = responseBody.main.pressure
                     val condition = responseBody.weather.firstOrNull()?.main ?: "unknown"
                     val max = responseBody.main.temp_max
                     val min = responseBody.main.temp_min
@@ -74,17 +71,11 @@ class MainActivity : AppCompatActivity() {
                     Log.d("TAG", "onResponse:$temperature")
                     binding.todayTemp.text = "$temperature°C"
                     binding.weatherText.text = condition
-//                    binding.condition.text = condition
-                    binding.maxText.text = "Max Temp: $max °C"
-                    binding.minText.text = "Min Temp: $min °C"
-//                    binding.humidity.text = "$humidity %"
-//                    binding.wind.text = "$windSpeed m/s"
-//                    binding.sunrise.text = "${time(sunRise )} am"
-//                    binding.sunset.text = "${time(sunSet)} pm"
-//                    binding.sea.text = "$seaLevel hPa"
-//                    binding.dateText.text = date()
-//                    binding.dayText.text = day(currentTimeMillis())
+                    binding.maxText.text = "$max °C"
+                    binding.minText.text = "$min °C"
                     binding.locationText.text = "$cityName"
+                    binding.dateText.text = date()
+                    binding.dayText.text = day(currentTimeMillis())
 
                     changeBackgroundWithWeather(condition)
                 }
@@ -98,7 +89,7 @@ class MainActivity : AppCompatActivity() {
         })
 
         binding.detailsButton.setOnClickListener {
-            val intent = Intent(this,DetailsActivity::class.java)
+            val intent = Intent(this, DetailsActivity::class.java)
             startActivity(intent)
         }
     }
@@ -108,34 +99,55 @@ class MainActivity : AppCompatActivity() {
         when (conditions) {
             "Clear Sky", "Sunny", "Clear" -> {
                 binding.icon.setBackgroundResource(R.drawable.sunny)
+                binding.bgImage.setImageResource(R.drawable.sun)
                 binding.lottieAnimationView.setAnimation(R.raw.sun)
             }
 
             "Partly Cloudy", "Clouds", "Overcast", "Mist", "Foggy" -> {
                 binding.icon.setBackgroundResource(R.drawable.cloudy)
+                binding.bgImage.setImageResource(R.drawable.cloud)
                 binding.lottieAnimationView.setAnimation(R.raw.cloud)
             }
 
             "Light Rain", "Drizzle", "Moderate Rain", "Showers", "Heavy" -> {
                 binding.icon.setBackgroundResource(R.drawable.stormy)
+                binding.bgImage.setImageResource(R.drawable.rain)
                 binding.lottieAnimationView.setAnimation(R.raw.rain)
             }
-            "Light Snow", "Moderate Snow", "Hesavy Snow", "Blizzard" -> {
+
+            "Light Snow", "Moderate Snow", "Heavy Snow", "Blizzard" -> {
                 binding.icon.setBackgroundResource(R.drawable.snowy)
+                binding.bgImage.setImageResource(R.drawable.snow)
                 binding.lottieAnimationView.setAnimation(R.raw.snow)
             }
 
             "Haze" -> {
                 binding.icon.setBackgroundResource(R.drawable.hazy)
+                binding.bgImage.setImageResource(R.drawable.haze)
                 binding.lottieAnimationView.setAnimation(R.raw.haze)
             }
 
             else -> {
                 binding.icon.setBackgroundResource(R.drawable.sunny)
+                binding.bgImage.setImageResource(R.drawable.sun)
                 binding.lottieAnimationView.setAnimation(R.raw.sun)
             }
 
         }
         binding.lottieAnimationView.playAnimation()
+    }
+    private fun date(): String {
+        val sdf = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault())
+        return sdf.format((Date()))
+    }
+
+    private fun time(timestamp: Long): String {
+        val sdf = SimpleDateFormat("HH:mm", Locale.getDefault())
+        return sdf.format((Date(timestamp * 1000)))
+    }
+
+    fun day(timestamp: Long): String {
+        val sdf = SimpleDateFormat("EEEE", Locale.getDefault())
+        return sdf.format((Date()))
     }
 }
